@@ -14,4 +14,5 @@ RUN apt-get update \
 # ホスト側のソースをマウント
 # VOLUME ["/apps/rust-server"]
 
+EXPOSE 3000
 CMD ["cargo", "watch", "-x", "run"]

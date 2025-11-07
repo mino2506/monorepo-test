@@ -1,0 +1,10 @@
+services:
+  rust-server:
+    build:
+      context: .
+      dockerfile: docker/rust.Dockerfile
+    working_dir: /apps/rust-server
+    volumes:
+      - ./apps/rust-server:/app
+    ports:
+      - "8080:8080"

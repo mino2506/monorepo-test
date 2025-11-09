@@ -1,0 +1,2 @@
+[alias]
+dev = 'watch -c -q -x "fmt" -x "clippy" -x "test" -x "run"'

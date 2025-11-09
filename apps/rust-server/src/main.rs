@@ -1,8 +1,7 @@
 use axum::Router;
-use std::net::SocketAddr;
-use tracing;
-use tracing_subscriber::EnvFilter;
 use dotenvy::dotenv;
+use std::net::SocketAddr;
+use tracing_subscriber::EnvFilter;
 
 mod routes;
 
@@ -14,7 +13,7 @@ async fn main() {
     }
 }
 
-async fn run()-> Result<(), Box<dyn std::error::Error>> {
+async fn run() -> Result<(), Box<dyn std::error::Error>> {
     // .env読み込み
     dotenv().ok();
 

@@ -3,11 +3,14 @@ use dotenvy::dotenv;
 use std::net::SocketAddr;
 use tracing_subscriber::EnvFilter;
 
+use db::add;
+
 mod error;
 mod routes;
 
 #[tokio::main]
 async fn main() {
+    println!("2 + 3 = {}\n", add(2, 3));
     if let Err(e) = run().await {
         eprintln!("fatal error: {e}");
         std::process::exit(1);

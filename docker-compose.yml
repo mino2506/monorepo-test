@@ -6,7 +6,7 @@ services:
     container_name: rust-api-server
     environment:
       RUST_LOG: rust_server=info,sqlx=warn # ログレベル設定
-      DB_HOST: pgvector-db # コンテナ内向けに固定してローカルと分離
+      DB_HOST: pgvector-db # ローカルと分離
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}

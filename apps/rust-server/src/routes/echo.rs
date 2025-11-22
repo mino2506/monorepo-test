@@ -35,15 +35,12 @@ mod tests {
 
     #[tokio::test]
     async fn empty_text_returns_bad_request() {
-        let req = EchoPayload {
-            text: "   ".into(), // trim すると空
-        };
+        let req = EchoPayload { text: "   ".into() };
 
         let err = handler(Json(req))
             .await
             .expect_err("should fail on empty text");
 
-        // バリアントまでチェックしたければ match / matches! を使う
         match err {
             AppError::BadRequest(msg) => {
                 assert_eq!(msg, "text must not be empty");

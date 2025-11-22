@@ -1,17 +1,16 @@
 use axum::Router;
+use db::check_connection;
 use dotenvy::dotenv;
 use std::net::SocketAddr;
 use tracing_subscriber::EnvFilter;
 
-use db::{add, check_connection, get_connection};
-
+mod config;
 mod error;
+mod migrate;
 mod routes;
 
 #[tokio::main]
 async fn main() {
-    println!("2 + 3 = {}\n", add(2, 3));
-    println!("database_url = {}\n", get_connection());
     if let Err(e) = run().await {
         eprintln!("fatal error: {e}");
         std::process::exit(1);
@@ -22,16 +21,22 @@ async fn run() -> Result<(), Box<dyn std::error::Error>> {
     // .env読み込み
     dotenv().ok();
 
-    let query = check_connection().await;
+    // DB接続確認
+    let db_url = config::build_database_url_from_env()?;
+    let pool = db::establish_connection(&db_url).await?;
 
-    match query {
-        Ok(_value) => {
-            println!("Database connection test succeeded");
-        }
-        Err(e) => {
-            println!("Database connection test failed: {}", e);
-        }
+    if let Err(e) = check_connection(&pool).await {
+        eprintln!("database connection test failed: {}", e);
+        return Err(e.into());
     }
+    println!("database connection test succeeded");
+
+    // マイグレーション実行
+    if let Err(e) = migrate::run_migrations(&pool).await {
+        eprintln!("failed to run migrations: {}", e);
+        return Err(e.into());
+    }
+    println!("database migrations applied successfully");
 
     // ログ初期化（最低限）
     tracing_subscriber::fmt()
